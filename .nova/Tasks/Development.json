@@ -1,0 +1,14 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : "#!\/bin\/sh\nnpm run build"
+    },
+    "run" : {
+      "enabled" : true,
+      "script" : "#!\/bin\/sh\nnpm run start"
+    }
+  },
+  "buildBeforeRunning" : true,
+  "identifier" : "579FEA84-1264-46DF-B3B9-2240DED5ACC8"
+}
