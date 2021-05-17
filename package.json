@@ -1,0 +1,60 @@
+{
+  "name": "@openlab/netlify-cms-github-auth",
+  "description": "A backend to allow GitHub logins for a self hosted netlify-cms",
+  "version": "0.0.0",
+  "private": true,
+  "repository": "digitalinteraction/netlify-cms-github-auth",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "build": "tsc",
+    "lint": "tsc --noEmit",
+    "prettier": "prettier --write '**/*.{js,json,css,md,ts,tsx}'",
+    "preversion": "npm run test && npm run build",
+    "postversion": "git push --follow-tags"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "debug": "^4.3.2",
+    "dotenv": "^8.6.0"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^14.14.45",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.3.0",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4",
+    "yorkie": "^2.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,json,css,md,ts,tsx}": [
+      "prettier --write"
+    ]
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.js"
+}

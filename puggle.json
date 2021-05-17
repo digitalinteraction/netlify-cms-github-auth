@@ -1,0 +1,24 @@
+{
+  "version": "0.5.5",
+  "projectName": "netlify-cms-github-auth",
+  "preset": {
+    "name": "robb-j:ts-node",
+    "version": "0.2.2"
+  },
+  "plugins": {
+    "npm": "0.1.0"
+  },
+  "params": {
+    "npm": {
+      "packageName": "@openlab/netlify-cms-github-auth",
+      "packageInfo": "A backend to allow GitHub logins for a self hosted netlify-cms",
+      "repository": "digitalinteraction/netlify-cms-github-auth"
+    },
+    "docker": {
+      "enabled": true
+    },
+    "cli": {
+      "enabled": false
+    }
+  }
+}
