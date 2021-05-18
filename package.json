@@ -1,7 +1,7 @@
 {
   "name": "@openlab/netlify-cms-github-auth",
   "description": "A backend to allow GitHub logins for a self hosted netlify-cms",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "repository": "digitalinteraction/netlify-cms-github-auth",
   "author": "robb-j",
