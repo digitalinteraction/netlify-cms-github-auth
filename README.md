@@ -1,8 +1,104 @@
 # netlify-cms-github-auth
 
-## Usage
+A backend to allow GitHub logins for a self hosted netlify-cms.
 
-> Work in progress
+## About
+
+This project produces a container that you can use as a backend for
+[netlify-cms](https://www.netlifycms.org)
+so that you can authenticate with GitHub via OAuth2.
+The container wraps the logic from
+[digitalinteraction/vercel-netlify-cms-github](https://github.com/digitalinteraction/vercel-netlify-cms-github)
+into a http server to serve requests and a health check.
+The app itself is minimal and only relies on
+[@openlab/vercel-netlify-cms-github](https://github.com/digitalinteraction/vercel-netlify-cms-github),
+[debug](https://github.com/visionmedia/debug), and
+[simple-oauth2](https://github.com/lelylan/simple-oauth2).
+
+## Guide
+
+This guide follows a deployment where the auth container is at `https://example.com`.
+
+**1. Create a GitHub OAuth application**
+
+Go to https://github.com/settings/developers.
+
+- Set **Homepage URL** to your static website url
+- Set **Authorization callback URL** to `https://example.com/callback`
+- Make a note of your `client_id` and `client_secret`
+
+**2. Deploy your container**
+
+There are so many ways to deploy containers, so this guide won't go into specifics.
+You want the container to be publicly available,
+probably behind a reverse proxy with an SSL certificate.
+The app runs on port `3000`
+and you will need to set the required environment variables from below.
+
+[You can find the container here →](https://github.com/orgs/digitalinteraction/packages/container/package/netlify-cms-github-auth)
+
+**3. Configure netlify-cms**
+
+Update your `config.yml`'s backend:
+
+```yaml
+backend:
+  name: github
+  repo: example/repository
+  base_url: https://example.com
+  auth_endpoint: auth
+```
+
+where:
+
+- `repo` is the GitHub repository path with the owner in it
+- `base_url` is the url to your server
+  This must not have any path components in, see _path-based routing_ below
+- `auth_endpoint` is the endpoint netlify-cms talks to (set to `auth`)
+
+[More information about netlify-cms backends →](https://www.netlifycms.org/docs/backends-overview/)
+
+> For path-based routing, for instance where your container is accessible at
+> `https://example.com/api/`,
+> set `base_url` to `https://example.com`
+> and `auth_endpoint` to `api/auth`.
+>
+> The `auth` on the end is the endpoint inside the container netlify-cms needs to talk to
+> and `api` at the start is your path to the container.
+>
+> Make sure this aligns with **Authorization callback URL** from step 1.
+
+### Environment variables
+
+**Required**
+
+- `SELF_URL` - The public url where the container is accessible at with no trailing slashes
+- `OAUTH_CLIENT_ID` - Your GitHub OAuth2 client id
+- `OAUTH_CLIENT_SECRET` - Your GitHub OAuth2 client secret
+
+**Optional**
+
+You could use these to talk to an enterprise version of GitHub,
+but this hasn't been tested.
+
+- `OAUTH_HOST` (default: `https://github.com`)
+- `OAUTH_TOKEN_PATH` (default: `/login/oauth/access_token`)
+- `OAUTH_AUTHORIZE_PATH` (default: `/login/oauth/authorize`)
+
+### Health check endpoint
+
+The app has an endpoint at `/healthz` which you can use for checking the container's health.
+Currently, it will return a `200` if everything is ok
+or a `503` if the app is terminating.
+
+### High-availability
+
+The app is stateless so you can run multiple instances if you'd like.
+In production, the app will wait an extra 5 seconds before shutting down
+while failing the health check to allow load balancers to update
+and connections to terminate.
+
+[More info →](https://github.com/godaddy/terminus#how-to-set-terminus-up-with-kubernetes)
 
 ## Development
 
@@ -90,7 +186,6 @@ and **only** runs when you push a [tag](https://git-scm.com/book/en/v2/Git-Basic
 npm version # major | minor | patch
 git push --tags
 ```
-
 
 ---
 
